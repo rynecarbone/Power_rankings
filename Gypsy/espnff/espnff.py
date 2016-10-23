@@ -67,6 +67,7 @@ class Team(object):
     self.logoUrl       = data['owners'][0]['photoUrl'] if 'logoUrl' not in data.keys() else data['logoUrl']
     self.divisionId    = data['division']['divisionId']
     self.divisionName  = data['division']['divisionName']
+    self.max_FAAB      = 100 # FIXME
     self.faab          = data['teamTransactions']['acquisitionBudgetSpent']
     self.trans         = data['teamTransactions']['overallAcquisitionTotal']
     self.trades        = data['teamTransactions']['trades']
@@ -94,6 +95,7 @@ class Team(object):
     self.rank_overall  = 1.
     self.prev_rank     = 1.
     self.prev_rank_overall= 1.
+    self._hack_owner()
     self._fetch_schedule(data)
       
   def __repr__(self):
@@ -104,6 +106,11 @@ class Team(object):
       if hasattr(self, attr):
         print('%20s:\t%s'%(attr, getattr(self,attr)))
   
+  def _hack_owner(self):
+    '''Fixes team Meff to correct owner'''
+    if 'Jeff' in self.owner:
+      self.owner = 'Meff Shulz'
+
   def _fetch_schedule(self, data):
     '''Fetch schedule and scores for team'''
     matchups = data['scheduleItems']

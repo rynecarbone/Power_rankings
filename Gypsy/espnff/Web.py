@@ -25,7 +25,7 @@ def get_arrow(i, j):
 
 
 #________________________________________
-def make_progress_bar(title, value, rank):
+def make_progress_bar(title, value, rank, max_FAAB=100):
   '''Makes progress bar with label and value'''
   tr = '<tr>'
   td = '<td>'
@@ -47,7 +47,7 @@ def make_progress_bar(title, value, rank):
   elif value < 66.66: progress_bar += db%(w,value,value)
   else:  progress_bar += db%(s,value,value)
   if "FAAB" in title:
-    progress_bar += sp+'$%d of $100'%(value) + ps #how to retreive max value?
+    progress_bar += sp+'$%d of $%d'%(rank, max_FAAB) + ps 
   else:
     progress_bar += sp+'(%s)'%rank + ps
   progress_bar += vd + vd +dt + rt
@@ -66,11 +66,9 @@ def make_game_log(t, week):
   game_log = ''
 
   for w,o in enumerate(t.schedule[:week]):
-    own   = 'Meff Shulz' if ('Jeff' in o.owner) else o.owner # maybe set earlier with own function
-    
     game_log += tr + td + '%s'%(w+1) + dt
     game_log += td + '%s'%(o.teamName) + dt
-    game_log += td + '%s'%own + dt
+    game_log += td + '%s'%(o.owner.title()) + dt
     game_log += td + '%.2f &mdash; %.2f'%(float(o.scores[w]),float(t.scores[w])) + dt
     game_log += td + (win if float(t.scores[w]) > float(o.scores[w]) else loss ) + dt + rt
 
@@ -88,11 +86,9 @@ def make_power_table(teams,week):
   
   for i,t in enumerate(sorted(teams, key=lambda x: x.power_rank, reverse=True)):
     arrow = get_arrow(int(t.prev_rank), int(i+1))
-    own   = 'Meff Shulz' if ('Jeff' in t.owner) else t.owner # make earlier, same as above
-
     table += tr
     table += td + str(i+1) + dt
-    table += td + own.title() + arrow + dt
+    table += td + t.owner.title() + arrow + dt
     table += td + '%s-%s'%(t.wins,t.losses) + dt
     table += td + "{0:.3f}".format(float(t.power_rank)) + dt
     table += td + "{0:.3f}".format(float(t.lsq_rank)) + dt
@@ -125,9 +121,7 @@ def make_teams_page(teams, week):
  
   # Make team page for each owner
   for i,t in enumerate(sorted(teams, key=lambda x: x.power_rank, reverse=True)):
-    # Hack for first name, and team logo FIXME
-    own   = 'Meff Shulz' if 'Jeff' in t.owner else t.owner # set earlier?
-    first = own.split()[0].title()
+    first = t.owner.split()[0].title()
     logo  = t.logoUrl if len(t.logoUrl) > 4 else stock_url
     if ('espncdn' in logo) and ('jrschulz09' in logo):
       logo = stock_url
@@ -141,7 +135,7 @@ def make_teams_page(teams, week):
 
     # replace with info
     for line in template:
-      line = line.replace('INSERTOWNER',own)
+      line = line.replace('INSERTOWNER',t.owner)
       line = line.replace('INSERTWEEK','week%s'%week)
       line = line.replace('IMAGELINK', logo)
       line = line.replace('TEAMNAME',t.teamName)
@@ -161,29 +155,32 @@ def make_teams_page(teams, week):
       if 'INSERT_TPF_PB' in line:
         pf_sort = sorted(teams, key=lambda x: x.pointsFor, reverse=True)
         pf_rank = get_index(pf_sort, t.teamId)
-        line = make_progress_bar('Total Points For: %.2f'%float(t.pointsFor), #fix any number of teams
-                                  110-100.*float(pf_rank)/10., 
+        line = make_progress_bar('Total Points For: %.2f'%float(t.pointsFor),
+                                  100.*float( len(teams)+1-pf_rank )/float(len(teams)),# want 1st to be 100% 
                                   ordinal(int(pf_rank))  )
       elif 'INSERT_TPA_PB' in line:
         pa_sort = sorted(teams, key=lambda x: x.pointsAgainst, reverse=True)
         pa_rank = get_index(pa_sort, t.teamId)
         line = make_progress_bar('Total Points Against: %.2f'%float(t.pointsAgainst), 
-                                  110-100.*float(pa_rank)/10.,  
+                                  100.*float( len(teams)+1-pa_rank )/float(len(teams)),  
                                   ordinal(int(pa_rank))  )
       elif 'INSERT_HS_PB' in line:
         hs_sort = sorted(teams, key=lambda x: max(x.scores[:week]), reverse=True)
         hs_rank = get_index(hs_sort, t.teamId)
         line = make_progress_bar('High Score: %.2f'%max(t.scores[:week]), 
-                                  110-100.*float(hs_rank)/10., 
+                                  100.*float( len(teams)+1-hs_rank)/float(len(teams)), 
                                   ordinal(int(hs_rank))  )
       elif 'INSERT_LS_PB' in line:
         ls_sort = sorted(teams, key=lambda x: min(x.scores[:week]), reverse=True)
         ls_rank = get_index(ls_sort, t.teamId)
         line = make_progress_bar('Low Score: %.2f'%min(t.scores[:week]), 
-                                  110-100.*float(ls_rank)/10., 
+                                  100.*float( len(teams)+1-ls_rank)/float(len(teams)), 
                                   ordinal(int(ls_rank))  )
       elif 'INSERT_FAAB_PB' in line:
-        line = make_progress_bar('FAAB Remaining', float(100-t.faab) ,int(100-t.faab) ) #fix for any league
+        max_FAAB = t.max_FAAB
+        line = make_progress_bar('FAAB Remaining', 
+                                  float(max_FAAB-t.faab)*(100./max_FAAB), 
+                                  int(max_FAAB-t.faab), max_FAAB ) 
       elif 'INSERTTABLEBODY' in line:
         line = make_game_log(t, week)
       # after checking all substitutions, finally write each line
@@ -215,7 +212,7 @@ def make_power_page(teams, week):
 
 
 #________________________________
-def make_about_page(week):
+def make_about_page():
   '''Produces about page, updating week for power rankings'''  
   
   # create directory if doesn't already exist
@@ -242,5 +239,5 @@ def make_web(teams, week):
 
   make_power_page(teams, week)
   make_teams_page(teams, week)
-  make_about_page(week)
+  make_about_page()
 

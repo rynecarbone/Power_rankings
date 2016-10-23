@@ -129,7 +129,7 @@ def plot_save_rank(rank_p,teams,week,show=False):
   fig = pl.figure(figsize=(10,6))
   t_ranks = []
   x = np.linspace(0,len(rank_p)-1, len(rank_p))
-  for t in range(10):
+  for t in range(len(teams)):
     temp =[]
     for p in rank_p:
       temp.append(p[t])

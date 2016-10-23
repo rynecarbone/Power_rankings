@@ -92,7 +92,7 @@ def power_points(teams, week):
     sos       = float(team.sos)
     luck      = 1./float(team.luck)
     streak    = float(team.streak)*int(team.streak_sgn)
-    avg_score = sum(team.scores[:week]) / week
+    avg_score = sum(team.scores[:week]) / float(week)
     min_max   = 0.5*float(min(team.scores[:week])) + 0.5*float(max(team.scores[:week]))
     
     # Only winning streaks longer than 1 game count

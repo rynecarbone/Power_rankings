@@ -58,7 +58,7 @@ if __name__ == "__main__":
   
   # Make radar plots
   for t in teams:
-    if 'Jeff' in t.owner:
+    if 'Meff' in t.owner:
       t._dump_info()
     R.make_radar(t, week)
 
