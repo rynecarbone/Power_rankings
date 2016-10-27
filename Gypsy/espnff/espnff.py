@@ -49,7 +49,7 @@ class League(object):
       for i,(mov,opponent) in enumerate(zip(team.mov[:week], team.schedule[:week])):
         opp = int(opponent.teamId)-1
         if mov > 0:
-          wins[opp]+= 1 + (0.5)*i/float(week) # last game weighted more
+          wins[opp]+= 0.5 + (0.5)*i/float(week) # last game weighted more
       win_matrix.append(wins)
       
     # save dominance score

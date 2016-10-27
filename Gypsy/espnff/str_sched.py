@@ -7,16 +7,16 @@ def calc_luck(teams, week):
   teams_sorted = sorted(teams, key=lambda x: x.teamId, reverse=False)
 
   for t in teams_sorted:
-    o_score_over_avg = 0.
+    o_avg_over_score = 0.
     # calc ratio of opp score over their avg score
     for w, o in enumerate(t.schedule[:week]):
       o_avg = float(sum(o.scores[:week]))/float(week)
-      ratio = float(o.scores[w])/o_avg
-      o_score_over_avg += ratio
+      ratio = o_avg/float(o.scores[w])
+      o_avg_over_score += ratio
 
     # add ratio of your win pct to awg
     record = float(t.wins) / float(t.wins + t.losses)
-    luck_ind = 0.5*float(o_score_over_avg)/week + 0.5*(0.01+float(record))/(0.01+float(t.awp))
+    luck_ind = 0.5*float(o_avg_over_score)/week + 0.5*(0.01+float(record))/(0.01+float(t.awp))
     t.luck = luck_ind
 
 
@@ -30,10 +30,8 @@ def calc_sos(teams, week):
   for t in teams_sorted:
     rank_i = 0
     for w, o in enumerate(t.schedule[:week]):
-      rank_i += o.lsq_rank
-    avg_r = rank_i/float(week)
-    sos = 100*(avg_r**2.37)
-    t.sos = sos
+      rank_i += (o.lsq_rank**2.37)
+    t.sos = rank_i/float(week)
 
   # Find avg sos
   sos_list = [x.sos for x in teams_sorted ]
