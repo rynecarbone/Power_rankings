@@ -47,14 +47,14 @@ def make_radar( team, week ):
 
   labels = [ np.linspace(0.2,1.,num=5),
              np.linspace(0.2,1.,num=5),
-             np.linspace(.5,2.5,num=5),
+             np.linspace(.6,1.4,num=5),
              np.linspace(100,180,num=5),
              np.linspace(-40,40,num=5),
              np.linspace(-3,5,num=5)
             ]
 
-  ymin = [ 0, 0,   0,  80, -60, -5]
-  ymax = [ 1, 1, 2.5, 180,  40,  5]
+  ymin = [ 0, 0,  0.4,  80, -60, -5]
+  ymax = [ 1, 1, 1.4, 180,  40,  5]
   scale = [ 5./(ymax[x]-ymin[x]) for x in range(6) ]
   offset = [ (0 - ymin[x]) for x in range(6) ]
 

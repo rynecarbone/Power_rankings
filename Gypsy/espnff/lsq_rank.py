@@ -7,9 +7,9 @@ import numpy as np
 def calc_Rg(S_h, S_a):
   '''Returns R_g given home and away scores '''
 
-  B_w    = 40.
-  B_r    = 40.
-  dS_max = 20.
+  B_w    = 40.#40
+  B_r    = 40.#40
+  dS_max = 20.#20
 
   dS_ha = float(S_h - S_a)
   dS_t  = dS_max*np.tanh(dS_ha/(3.*dS_max))
@@ -44,7 +44,7 @@ def calc_Ng_list(teams, week):
 def calc_sig_g(prev_rank,N_g):
   '''Returns Sigma_g for each game given previous iterations rankings'''
   
-  beta_w  = 2.8
+  beta_w  = 2.2
   alpha_w = (max(prev_rank) - min(prev_rank))/np.log(beta_w*beta_w) 
   
   sig_g = []
@@ -93,7 +93,7 @@ def rank_pass(teams, week, passN=0, prev_rank=[] ):
     b.append(R_g/sig_g[g])
     A.append(row_g)
   
-  rank = lsq_linear(A,b,bounds=(0,100))#,lsq_solver='exact')
+  rank = lsq_linear(A,b,bounds=(30,130))#,lsq_solver='exact')
 
   if rank.success == False:
     print('WARNING:\t%s'%rank.message)
@@ -114,7 +114,7 @@ def get_lsq_rank(teams, week, show=False):
   rank_p.append( rank_pass(teams,week,passN=0) )
   
   # Iterate with previous ranks as input, recalculate weight
-  for p in range(1,100):
+  for p in range(0,100):
     rank_p.append( rank_pass(teams, week, passN=p, prev_rank=rank_p[p-1]))
   
   # plot result of iterations

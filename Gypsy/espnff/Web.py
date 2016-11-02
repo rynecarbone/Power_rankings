@@ -202,7 +202,7 @@ def make_power_page(teams, week):
 
   for line in template:
     if 'INSERT WEEK' in line:
-      line = line.replace('INSERT WEEK','Week %s'%week)
+      line = line.replace('INSERT WEEK','Week %s'%(week+1))
     elif 'INSERT TABLE' in line:
       line = make_power_table(teams,week)
     f_out.write(line)
@@ -230,9 +230,37 @@ def make_about_page():
   f_out.close()
   template.close()
 
+#________________________________
+def make_welcome_page(week, league_id, league_name):
+  '''Produces welcome page, with power plot'''  
+  
+  # create directory if doesn't already exist
+  out_name = 'output/index.html'
+  os.makedirs(os.path.dirname(out_name), exist_ok=True)
+  
+  template = open('template/welcome.html','r')
+  f_out    = open(out_name,'w')
+  
+  # copy lines
+  for line in template:
+    if 'INSERTWEEK' in line:
+      line = line.replace('INSERTWEEK',"week%d"%week)
+    if 'INSERTNEXT' in line:
+      line = line.replace('INSERTNEXT',"Week %d"%(week+1))
+    if 'INSERTLEAGUEID' in line:
+      line = line.replace('INSERTLEAGUEID',"%s"%league_id)
+    if 'INSERTLEAGUENAME' in line:
+      line = line.replace('INSERTLEAGUENAME',"%s"%league_name)
+    f_out.write(line)
+  
+  # close files
+  f_out.close()
+  template.close()
+
+
 
 #_________________________
-def make_web(teams, week):
+def make_web(teams, week, league_id, league_name):
   '''Makes power rankings page
            team summary page
            about page'''
@@ -240,4 +268,4 @@ def make_web(teams, week):
   make_power_page(teams, week)
   make_teams_page(teams, week)
   make_about_page()
-
+  make_welcome_page(week,league_id, league_name)

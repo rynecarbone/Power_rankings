@@ -100,7 +100,7 @@ def power_points(teams, week):
     consistency = float(min_max)/avg_score
 
     #power =  0.35*lsq + 0.22*dom + 0.1*colley +  0.10*sos + 0.10*luck + 0.08*consistency + 0.05*streak
-    power =   0.25*dom + 0.16*lsq + 0.16*colley + 0.15*team.awp  + 0.10*sos + 0.08*luck + 0.05*consistency + 0.05*streak
+    power =   0.21*dom + 0.18*lsq + 0.18*colley + 0.15*team.awp  + 0.10*sos + 0.08*luck + 0.05*consistency + 0.05*streak
     
     team.power_rank = 100*np.tanh(power/0.5)
   

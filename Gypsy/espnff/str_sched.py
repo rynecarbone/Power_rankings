@@ -1,3 +1,5 @@
+import numpy as np
+
 #__________________________
 def calc_luck(teams, week):
   '''Calculates luck index
@@ -30,7 +32,7 @@ def calc_sos(teams, week):
   for t in teams_sorted:
     rank_i = 0
     for w, o in enumerate(t.schedule[:week]):
-      rank_i += (o.lsq_rank**2.37)
+      rank_i += 100*(o.lsq_rank**2.37)
     t.sos = rank_i/float(week)
 
   # Find avg sos
@@ -39,6 +41,7 @@ def calc_sos(teams, week):
   
   # normalize so avg = 1
   for t in teams_sorted:
+    #t.sos = np.sqrt(t.sos * 1./avg_sos)
     t.sos = t.sos * 1./avg_sos
 
 #________________________

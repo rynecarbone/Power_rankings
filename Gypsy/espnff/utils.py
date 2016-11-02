@@ -53,8 +53,8 @@ def add_matrix(X, Y):
 def two_step_dominance(X, teams):
   '''Calculates result of two step dominance formula, with weights specified'''
   
-  w_sq = 0.2 # weigh squared matrix
-  w_l  = 0.8 # weigh linear matrix
+  w_sq = 0.25 # weigh squared matrix
+  w_l  = 0.75 # weigh linear matrix
   
   sq   = weigh_matrix( square_matrix(X), w_sq )
   l    = weigh_matrix( X, w_l )
@@ -96,10 +96,11 @@ def power_points(teams, week):
     min_max   = 0.5*float(min(team.scores[:week])) + 0.5*float(max(team.scores[:week]))
     
     # Only winning streaks longer than 1 game count
-    streak = 0.75*streak if streak > 1 else 0.
+    streak = 0.25*streak if streak > 1 else 0.
     consistency = float(min_max)/avg_score
 
-    power =  0.35*lsq + 0.22*dom + 0.1*colley +  0.10*sos + 0.10*luck + 0.08*consistency + 0.05*streak
+    #power =  0.35*lsq + 0.22*dom + 0.1*colley +  0.10*sos + 0.10*luck + 0.08*consistency + 0.05*streak
+    power =   0.25*dom + 0.16*lsq +0.16*colley + 0.15*team.awp + 0.10*sos + 0.08*luck + 0.05*consistency + 0.05*streak
     team.power_rank = 100*np.tanh(power/0.5)
   
 
@@ -130,8 +131,8 @@ def get_tiers(teams, week, bw = 0.1, show=False):
   f2.savefig(out_name)
   plt.close()
 
-  # Find minima to define tiers (spaced at least +/- 6 apart)
-  minima = x_grid[ argrelmin( kde(x_grid),order=6 )[0] ]
+  # Find minima to define tiers (spaced at least +/- 5 apart)
+  minima = x_grid[ argrelmin( kde(x_grid),order=5 )[0] ]
   s_min = sorted(minima, reverse=True)
   tier = 1
   for t in teams:
