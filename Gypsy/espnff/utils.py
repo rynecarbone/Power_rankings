@@ -102,7 +102,11 @@ def power_points(teams, week):
     #power =  0.35*lsq + 0.22*dom + 0.1*colley +  0.10*sos + 0.10*luck + 0.08*consistency + 0.05*streak
     power =   0.25*dom + 0.16*lsq +0.16*colley + 0.15*team.awp + 0.10*sos + 0.08*luck + 0.05*consistency + 0.05*streak
     team.power_rank = 100*np.tanh(power/0.5)
-  
+
+    #if ('jordan' in team.owner) or ('Ryne' in team.owner):
+    #  print('Owner: %s'%team.owner)
+    #  print('dom: %.3f\nlsq: %.3f\ncol: %.3f\nawp: %.3f\nsos: %.3f\nluck: %.3f \ncons: %.3f\nstrk: %.3f'
+    #        %(0.25*dom, 0.16*lsq, 0.16*colley, 0.15*team.awp, 0.10*sos, 0.08*luck, 0.05*consistency, 0.05*streak))
 
 #________________________________________________
 def get_tiers(teams, week, bw = 0.1, show=False):
@@ -132,7 +136,7 @@ def get_tiers(teams, week, bw = 0.1, show=False):
   plt.close()
 
   # Find minima to define tiers (spaced at least +/- 5 apart)
-  minima = x_grid[ argrelmin( kde(x_grid),order=5 )[0] ]
+  minima = x_grid[ argrelmin( kde(x_grid),order=3 )[0] ]
   s_min = sorted(minima, reverse=True)
   tier = 1
   for t in teams:

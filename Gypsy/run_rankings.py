@@ -7,6 +7,7 @@ from espnff import str_sched as ss
 from espnff import Web as W
 from espnff.utils import power_points,get_tiers,save_ranks
 from espnff import power_plot as P
+from espnff import playoff_odds as po
 
 #________________________
 if __name__ == "__main__":
@@ -14,7 +15,7 @@ if __name__ == "__main__":
   league_name = "Gypsymen Fantasy"
   league_id   = 292301
   year        = 2016
-  week        = 8
+  week        = 11
   
   # Retrieve league info 
   l = League(league_id, year) 
@@ -23,6 +24,9 @@ if __name__ == "__main__":
   # Recalculate wins etc
   ss.calc_wins_losses(teams, week)
   
+  po.calc_playoffs(teams, week)
+  exit()
+
   # Get dominace rankings  
   l.calc_dom(week)
   

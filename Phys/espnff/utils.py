@@ -133,7 +133,7 @@ def get_tiers(teams, week, bw = 0.1, show=False):
   plt.close()
 
   # Find minima to define tiers (spaced at least +/- 6 apart)
-  minima = x_grid[ argrelmin( kde(x_grid),order=6 )[0] ]
+  minima = x_grid[ argrelmin( kde(x_grid),order=4 )[0] ]
   s_min = sorted(minima, reverse=True)
   tier = 1
   for t in teams:
@@ -142,7 +142,8 @@ def get_tiers(teams, week, bw = 0.1, show=False):
       tier += 0
     # if rank below current minima, create new tier
     elif t.power_rank < s_min[tier-1]: 
-      tier += 1
+      if tier < 5:
+        tier += 1
     # save tier
     t.tier = tier
 
