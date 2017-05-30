@@ -15,7 +15,7 @@ if __name__ == "__main__":
   league_name = "Gypsymen Fantasy"
   league_id   = 292301
   year        = 2016
-  week        = 11
+  week        = 12
   
   # Retrieve league info 
   l = League(league_id, year) 
@@ -24,8 +24,8 @@ if __name__ == "__main__":
   # Recalculate wins etc
   ss.calc_wins_losses(teams, week)
   
-  po.calc_playoffs(teams, week)
-  exit()
+ # po.calc_playoffs(teams, week)
+ # exit()
 
   # Get dominace rankings  
   l.calc_dom(week)

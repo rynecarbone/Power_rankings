@@ -15,7 +15,7 @@ if __name__ == "__main__":
   league_name = "Physical Fantasy"
   league_id = 394948
   year      = 2016
-  week      = 11
+  week      = 13
   
   # Retrieve league info 
   l = League(league_id, year) 
@@ -25,8 +25,8 @@ if __name__ == "__main__":
   ss.calc_wins_losses(teams, week)
   
   # Playoff odds
-  po.calc_playoffs(teams, week)
-  exit()
+  #po.calc_playoffs(teams, week)
+  #exit()
 
   # Get dominace rankings  
   l.calc_dom(week)
