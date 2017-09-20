@@ -15,7 +15,7 @@ if __name__ == "__main__":
   league_name = "Physical Fantasy"
   league_id = 394948
   year      = 2016
-  week      = 13
+  week      = 4
   
   # Retrieve league info 
   l = League(league_id, year) 
@@ -61,14 +61,14 @@ if __name__ == "__main__":
            float(t.colley_rank), float(t.sos),float(t.awp),float(t.luck),int(t.tier),int(t.prev_rank)-(i+1)))
   
   # Make power rankings plot
-  P.make_power_plot(teams,week)
+  #P.make_power_plot(teams,week)
   
   # Make website template
-  W.make_web(teams, week, league_id, league_name)
+  #W.make_web(teams, week, league_id, league_name)
   
   # Make radar plots
-  for t in teams:
-    if 'Meff' in t.owner:
-      t._dump_info()
-    R.make_radar(t, week)
+  #for t in teams:
+  #  if 'Meff' in t.owner:
+  #    t._dump_info()
+  #  R.make_radar(t, week)
 
